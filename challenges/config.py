@@ -64,7 +64,7 @@ class Config(object):
     PORT=''
     SERVER_URL=''
     PREFIX='/challenges' # only required if using prefix
-    PORT=':9050' # only required if using prefix
+    PORT=':8050' # only required if using prefix
     SERVER_URL='https://challenges.fnmathlogic.com' # only required if using prefix
     REDIRECT_URL = SERVER_URL+PORT+REDIRECT_PATH
     GOOGLE_REDIRECT_URL = SERVER_URL+PORT+GOOGLE_REDIRECT_PATH

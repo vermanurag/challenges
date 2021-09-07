@@ -1,4 +1,4 @@
-bind = "0.0.0.0:9050"
+bind = "0.0.0.0:8050"
 workers = 8
 keyfile = '/etc/letsencrypt/live/challenges.fnmathlogic.com/privkey.pem'
 certfile = '/etc/letsencrypt/live/challenges.fnmathlogic.com/fullchain.pem'
