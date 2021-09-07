@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      {% block head %}
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="shortcut icon" href="static/img/favicon.ico">
+      {% block styles %}
+          <!-- Bootstrap CSS -->
+          {{ bootstrap.load_css() }}
+      {% endblock %}
+      <title>
+        {% block title %}
+        {{ config.BRAND }}
+        {% endblock %}
+      </title>
+      {% endblock %}
+  </head>
+ <body>
+    <div class="container">
+    {% block navbar %}
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">{{ config.BRAND }}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li >
+                    <a  class="nav-link" href="{{ config.PREFIX }}" aria-haspopup="true" aria-expanded="false">
+                        Home
+                    </a>
+                <li >
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Demo App Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
+      {% if (1 in config.ACTIVE_DASH_APPS) %}
+        <a class="dropdown-item" href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_1') }}">{{ config.DASH_APP_1_MENU_TEXT}}</a>
+      {% endif %}
+      {% if (2 in config.ACTIVE_DASH_APPS) %}
+        <a class="dropdown-item" href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_2') }}">{{ config.DASH_APP_2_MENU_TEXT}}</a>
+      {% endif %}
+      {% if (3 in config.ACTIVE_DASH_APPS) %}
+			  <a class="dropdown-item" href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_3') }}">{{ config.DASH_APP_3_MENU_TEXT}}</a>
+      {% endif %}
+      {% if (4 in config.ACTIVE_DASH_APPS) %}
+			  <a class="dropdown-item" href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_4') }}">{{ config.DASH_APP_4_MENU_TEXT}}</a>
+      {% endif %}
+      {% if (5 in config.ACTIVE_DASH_APPS) %}
+			  <a class="dropdown-item" href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_5') }}">{{ config.DASH_APP_5_MENU_TEXT}}</a>
+      {% endif %}
+      {% if (6 in config.ACTIVE_DASH_APPS) %}
+			  <a class="dropdown-item" href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_6') }}">{{ config.DASH_APP_6_MENU_TEXT}}</a>
+      {% endif %}
+      {% if (7 in config.ACTIVE_DASH_APPS) %}
+			  <a class="dropdown-item" href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_7') }}">{{ config.DASH_APP_7_MENU_TEXT}}</a>
+      {% endif %}
+      {% if (8 in config.ACTIVE_DASH_APPS) %}
+        <a class="dropdown-item" href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_8') }}">{{ config.DASH_APP_8_MENU_TEXT}}</a>
+      {% elif (9 in config.ACTIVE_DASH_APPS) %}
+        <a class="dropdown-item" href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_9') }}">{{ config.DASH_APP_9_MENU_TEXT}}</a>
+      {% endif %} 
+      {% if (10 in config.ACTIVE_DASH_APPS) %}
+        <a class="dropdown-item" href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_10') }}">{{ config.DASH_APP_10_MENU_TEXT}}</a>
+      {% endif %}
+                    </div>
+                </li>
+	{% if not current_user.is_anonymous %}
+                <li >
+		   <a class="nav-link" href="{{ config.PREFIX }}" id="navbarDropdownMenuLink3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		     	Hi, {{ current_user.name }}!
+        	    </a> 
+	        </li>
+                <li >
+		    <a  class="nav-link" href="{{ config.PREFIX }}{{ url_for('auth.logout') }}" aria-haspopup="true" aria-expanded="false">
+			<!--img src = '{{ config.PREFIX }}{{ url_for('static',filename = "img/logout.png") }}' alt = 'Logout' width = "40" height = "40"-->
+			<span class="glyphicon glyphicon-log-out">Logout</span>
+		    </a> 
+			{% else %}
+              	<li > 
+                    <a class="nav-link" href="{{ config.PREFIX }}{{ url_for('auth.login') }}" aria-haspopup="true" aria-expanded="false">
+                  <span class="glyphicon glyphicon-log-out">Login</span>
+			</a>
+                </li>
+			{% endif %}
+            </ul>
+        </div>
+    </nav>
+
+	{% endblock %}
+      </div>
+    {% block messages %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    {% if category == 'message' or category == 'info' %}
+                        <div class="alert alert-info">
+                            <strong>Info!</strong> {{ msg }}
+                        </div>
+                    {% endif %}
+                    {% if category == 'danger' %}
+                        <div class="alert alert-danger">
+                            <strong>Danger!</strong> {{ msg }}
+                        </div>
+                    {% endif %}
+                    {% if category == 'warning' %}
+                        <div class="alert alert-warning">
+                            <strong>Warning!</strong>  {{ msg }}
+                        </div>
+                    {% endif %}
+                    {% if category == 'success' %}
+                        <div class="alert alert-success">
+                            <strong>Success!</strong> {{ msg }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    {% endblock %}
+
+    <!-- Your page content -->
+    {% block app_content %}
+    {% endblock %}
+    </div>
+
+  </body>
+    {% block scripts %}
+        <!-- Optional JavaScript -->
+         {{ bootstrap.load_js() }}
+    {% endblock %}
+</html>

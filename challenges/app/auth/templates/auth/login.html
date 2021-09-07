@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block app_content %}
+<div class="container">
+	<img class="mb-4 mt-4 mx-auto d-block" src="{{config.PREFIX}}{{ url_for('static', filename='img/MathLogic_Logo.png') }}" width=200 alt="">
+    <a class="btn btn-primary btn-lg btn-block" role="button" href='{{ auth_url }}'>
+        Please Sign In using Microsoft Account
+    </a>
+    <br>
+    <a class="btn btn-primary btn-lg btn-block" role="button" href='{{ google_auth_url }}'>
+        Please Sign In using Google Account
+    </a>
+    {% if current_user.is_authenticated %}
+        <H3>Logged in as {{ current_user.name }}</H3>
+    {% endif %}
+</div>
+{% endblock %}

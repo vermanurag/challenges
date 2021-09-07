@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block app_content %}
+
+<div style = "width:90%; margin:auto">
+<h1>Hi, {{ current_user.name }}!</h1>
+{% if current_user.is_authenticated %}
+<p>Welcome to {{config.BRAND }} web apps.</p>
+<br>
+{% if access|length > 0  %}
+<p>You have access to the following apps:<p>
+
+{% for app in access %}
+{% if (app.app_id == 'dash_app_1') and (1 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_1') }}">{{ config.DASH_APP_1_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_2' and (2 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_2') }}">{{ config.DASH_APP_2_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_3' and (3 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_3') }}">{{ config.DASH_APP_3_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_4' and (4 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_4') }}">{{ config.DASH_APP_4_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_5' and (5 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_5') }}">{{ config.DASH_APP_5_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_6' and (6 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_6') }}">{{ config.DASH_APP_6_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_7' and (7 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_7') }}">{{ config.DASH_APP_7_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_8' and (8 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_8') }}">{{ config.DASH_APP_8_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_9' and (9 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_9') }}">{{ config.DASH_APP_9_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_10' and (10 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_10') }}">{{ config.DASH_APP_10_MENU_TEXT}}</a><br>
+{% endif %}
+{% endfor %}
+
+<p>Don't see your App listed here? Email: {{config.DEVELOPER_EMAIL}} to get access</p>
+{% else %}
+<p>You dont seem to have access to any App. Email: {{config.DEVELOPER_EMAIL}} to get access</p>
+{% endif %}
+<pre>
+<strong>DISCLAIMER</strong>
+This application has been developed as an aid to the dermatologist for the trichoscopic assessment of hair count.
+It does not overrule clinical judgement and is limited by the quality of the photograph and its interpretation by the software.
+The application and its output result should not serve as the only deciding criteria for the management of any case.
+This application and its output result, cannot serve for any medicolegal purposes.
+</pre>
+{% else %}
+<p>Welcome to AIML demo for web apps. You will need to login to access these apps. Access to apps is controlled via Microsoft or Google Authentication.</p>
+{% endif %}
+
+</div>
+
+{% endblock %}

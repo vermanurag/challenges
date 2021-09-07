@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block app_content %}
+<div style = "width:90%; margin:auto">
+        <h2>Oops! Looks like you do not have access to the webapp</h2>
+        <h2>Or the link is no longer valid.</h2>
+  <a href="{{ url_for('main.index') }}"><p>Click Here</a> To go to the Home Page</p>
+</div>
+{% endblock %}
