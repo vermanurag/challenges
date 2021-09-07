@@ -30,8 +30,8 @@ class Config(object):
     GOOGLE_REDIRECT_PATH = os.environ.get('GOOGLE_REDIRECT_PATH','/getOAToken')
     GOOGLE_SCOPE = ['https://www.googleapis.com/auth/userinfo.email']
     BOOTSTRAP_BOOTSWATCH_THEME='cerulean'
-    DASH_APP_1_URL='alpha' #No spaces #All small
-    DASH_APP_1_MENU_TEXT="Cloud Hire(Alpha)" #Can have spaces
+    DASH_APP_1_URL='v1' #No spaces #All small
+    DASH_APP_1_MENU_TEXT="Challenges(v1" #Can have spaces
     DASH_APP_1_LOGIN_REQ=True # Whether login is required for this app
     DASH_APP_2_URL='beta' #No spaces #All small
     DASH_APP_2_MENU_TEXT="Cloud Hire(Beta)" #Can have spaces
@@ -63,10 +63,10 @@ class Config(object):
     PREFIX=''
     PORT=''
     SERVER_URL=''
-    PREFIX='/cloudhire' # only required if using prefix
+    PREFIX='/challenges' # only required if using prefix
     PORT=':9050' # only required if using prefix
-    SERVER_URL='https://cloudhire.fnmathlogic.com' # only required if using prefix
+    SERVER_URL='https://challenges.fnmathlogic.com' # only required if using prefix
     REDIRECT_URL = SERVER_URL+PORT+REDIRECT_PATH
     GOOGLE_REDIRECT_URL = SERVER_URL+PORT+GOOGLE_REDIRECT_PATH
     ACTIVE_DASH_APPS=[1]
-    DEVELOPER_EMAIL='cloudhire@fnmathlogic.com'
+    DEVELOPER_EMAIL='challenges@fnmathlogic.com'
