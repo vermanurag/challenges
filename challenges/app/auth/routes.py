@@ -4,7 +4,7 @@ from flask import Flask, redirect, url_for, render_template, flash, current_app,
 from flask_login import login_user, logout_user, current_user, login_required
 from app import db
 from app.auth import bp
-from app.auth import _build_msal_auth_url, _build_msal_app, _build_google_auth_url, _build_google_app
+from app.auth import _build_msal_auth_url, _build_msal_app, _build_google_auth_url, _build_google_app,_build_li_auth_url, _build_li_access_token, _get_li_user_details 
 from app.auth.models import User
 from google.oauth2 import id_token
 from google.auth.transport import requests as R
@@ -39,7 +39,8 @@ def login():
         session["state"] = str(uuid.uuid4())
         auth_url = _build_msal_auth_url(scopes=current_app.config['SCOPE'], state=session["state"])
         google_auth_url, _ = _build_google_auth_url(state=session["state"])
-        return render_template("auth/login.html", auth_url=auth_url,google_auth_url=google_auth_url)
+        li_auth_url = _build_li_auth_url(state=session["state"])
+        return render_template("auth/login.html", auth_url=auth_url,google_auth_url=google_auth_url,li_auth_url=li_auth_url)
 
 @bp.route(current_app.config['REDIRECT_PATH'], methods=['GET'])
 def authorized():
@@ -115,6 +116,58 @@ def google_authorized():
             return redirect(url_for('auth.login'))
         name = id_info.get('name')
         email = id_info.get('email')
+        if name is None and email is not None:
+            name = email
+        if name is None or email is None:
+            flash('Authentication failed.')
+            return redirect(url_for('auth.login'))
+        user = User.query.filter_by(email=email).first()
+        useremail = User.query.filter_by(email=email).first()
+
+        if current_app.config['ADD_USER_AUTOMATICALLY'] and not useremail:
+            user = User(name=name, email=email)
+            db.session.add(user)
+            db.session.commit()
+        else:
+            if not user and useremail:
+                useremail.name=name
+                db.session.commit()
+            elif not useremail:
+                flash('Authenticated User does not have Access to system.')
+                flash('Get in touch with System Administrator for Access.')
+                return redirect(url_for('auth.logout'))
+
+        logged_in = login_user(user, remember=True, force=True)
+
+    else:
+        redirect(current_app.config['PREFIX']+url_for('auth.login'))
+
+    return redirect(next_url or url_for('main.index'))
+
+@bp.route(current_app.config['LI_REDIRECT_PATH'], methods=['GET'])
+def li_authorized():
+    next_url = request.args.get('next')
+    if request.args.get('state') != session.get("state"):
+        return redirect(current_app.config['PREFIX']+url_for('main.index'))  # No-OP. Goes back to Index page
+
+    if not current_user.is_anonymous:
+        return redirect(next_url or url_for('main.index'))
+
+    if request.args.get('code'):
+        code = request.args.get('code')
+        #print(code)
+        name = None
+        email=None
+        #Now Get Access Token in exchange for Auth Code
+        try:
+            r = _build_li_access_token(code=code)
+            if r.status_code == 200:
+                access_token = r.json().get('access_token')
+                name, email = _get_li_user_details(access_token)
+        except Excpetion as e:
+            print(e)
+            flash('Authentication failed', 'danger')
+            return redirect(url_for('auth.login'))
         if name is None and email is not None:
             name = email
         if name is None or email is None:

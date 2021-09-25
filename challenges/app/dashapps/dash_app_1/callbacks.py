@@ -1,5 +1,6 @@
+# callback.py
 import pandas as pd
-import os
+import os, json, requests
 import dash
 from dash.dependencies import Output, Input, State
 from dash.exceptions import PreventUpdate
@@ -8,73 +9,112 @@ from flask_login import current_user
 from flask import flash
 
 def register_callbacks(app):
-    @app.callback([Output('output-image-upload', 'children'),
-                  Output('hidden-filename', 'children'),
-                  Output('output-image-inference', 'hidden')],
-                  [Input('upload-image', 'contents'),
-                   Input('hidden-save-success','children')],
-                  [State('upload-image', 'filename'),
-                  State('upload-image', 'last_modified')])
-    def update_output(list_of_contents,save_success, list_of_names, list_of_dates):
+    @app.callback(Output('questionid-dropdown','options'),
+        [Input('eventid-dropdown','value'),
+         Input('hidden-data','data')])
+    def filter_question(selected_event, js):
+        #print("filter_brand")
+        #print(selected_event)
+        if (selected_event != None) & (selected_event != []):
+            question_list = list(set([row['questionid'] for row in json.loads(js) if row['eventid'] == selected_event]))
+            return [{'label':i,'value' : i} for i in question_list]
+        else:
+            print("No event selected")
+            return []
+
+    @app.callback([Output('hidden-data','data'),
+        Output('eventid-dropdown','options')],
+        [Input('refresh','n_clicks')])
+    def get_base_data(n_clicks):
+        print("refreshing data")
+        try:
+            userid = current_user.email
+            #print(userid)
+            js = get_data(userid)
+            event_list = list(set([row['eventid'] for row in json.loads(js)]))
+            return [js,[{'label':i,'value' : i} for i in event_list]]
+        except Exception as e:
+            print("No User email or Error in accessing data")
+            print(e)
+
+    @app.callback([Output('solution-value-wrapper','hidden'),
+        Output('bucket-name-wrapper','hidden'),
+        Output('solution-file-wrapper','hidden'),
+        Output('solution-file','accept'),
+        Output('hidden-question-type','data')],
+        [Input('questionid-dropdown','value'),
+        Input('hidden-data','data')])
+    def filter_output_param(selected_question,js):
+        if (selected_question != None) & (selected_question != []):
+            question_type = [row['type'] for row in json.loads(js) if row['questionid'] == selected_question][0]
+            file_type = [row['file_type'] for row in json.loads(js) if row['questionid'] == selected_question][0]
+            if question_type in [0,1]:
+                return [False, True, True, "","solution_value"]
+            elif question_type in [3,5]:
+                return [True, False, True, "","bucket_name"]
+            else:
+                if file_type in ('.csv','application/pdf', 'application/json', 'text/plain', 'application/xml','image/png', 'image/jpeg', 'image/gif', 'image/jpg'):
+                    print(file_type)
+                    return [True, True, False, file_type,"solution_file"]
+                else:
+                    return [True, True, False, ".csv", "soluton_file"]
+            return 
+        else:
+            print("No question selected")
+            return [True, True, True, 'text/csv',"None"]
+
+    @app.callback([Output('submission-message','children'),
+        Output('submission-message','hidden')],
+        [Input('submit','n_clicks'),
+        Input('eventid-dropdown','value'),
+        Input('questionid-dropdown','value'),
+        Input('hidden-question-type','data'),
+        Input('solution-value','value'),
+        Input('bucket-name','value'),
+        Input('hidden-file-name','data')
+         ])
+    def submit_response(n_clicks, eventid, questionid, qtype , solution_value, bucket_name, solution_file):
+        #print("submitting data")
         ctx = dash.callback_context # get the context why the function is trigerred
-        if ctx.triggered[0]['prop_id'] == 'hidden-save-success.children' and save_success == [True]:
-            return ["Thanks. Your feedback has been saved.","",True]
-        if list_of_contents is not None:
+        if ctx.triggered[0]['prop_id'] != "submit.n_clicks":
+            raise PreventUpdate
+        skip= False
+        base_url='https://us-central1-competencyassessment.cloudfunctions.net/evaluate_v9'
+        userid=current_user.email
+        params={'eventid':eventid, 'userid':userid,'questionid':questionid }
+        if qtype == 'solution_value':
+            params['solution_value'] = solution_value
+        elif qtype == 'bucket_name':
+            params['bucket_name'] = bucket_name
+        elif qtype == 'solution_file':
+            params['solution_file'] = "gs://challenges-competencyassessment/"+solution_file
+        else:
+            message = "Invalid Question Type or Question Id not selected"
+            skip = True
+        print(params)
+        if skip:
+            pass
+        else:
+            r = requests.get(base_url,params=params)
+            message = r.text
+        return(message, False)
+
+    @app.callback([Output('hidden-file-name','data'),
+    	Output('uploaded-file','children'),
+    	Output('uploaded-file','hidden')],
+        [Input('solution-file','contents'),
+         Input('solution-file','filename')])
+    def save_uploaded_file(contents, orig_file_name):
+        print("Uploading File")
+        if contents is not None:
             filename = generate_random_filename()
-            saved = save_image(list_of_contents[0], os.path.join(DATA_DIR,filename)) # Saves only the first file
+            saved = save_file(contents, filename) # Saves only the first file
             if saved:
-              children = [
-                parse_contents(c, n, d, filename) for c, n, d in
-                zip(list_of_contents, list_of_names, list_of_dates)]
-              return [children, filename,  False ]
+                print("file saved")
+                return [filename,orig_file_name,False]
             else:
-              return ["Error uploading file", "", True ]
-        else:
-            raise PreventUpdate
-
-
-    @app.callback([Output('model-inference', 'children'),
-                  Output('output-image-feedback', 'hidden'),
-                  Output('model-inference', 'hidden')],
-                  [Input('process-image', 'n_clicks'),
-                   Input('hidden-save-success','children'),
-                   Input('hidden-filename', 'children')],
-                  [State('upload-image','filename')])
-    def get_model_inference(n_clicks, save_success, id, filename):
-        ctx = dash.callback_context # get the context why the function is trigerred
-        if (ctx.triggered[0]['prop_id'] == "hidden-filename.children") or (ctx.triggered[0]['prop_id'] == 'hidden-save-success.children' and save_success == [True]):
-            return ["", True, True]
-        elif ctx.triggered[0]['prop_id'] == "process-image.n_clicks":
-            #TBD Code to call model and get inference
-            model_inference = prediction(os.path.join(DATA_DIR,id))
-            userid = current_user.email 
-            result = derma_save(id,userid,filename[0],model_inference)
-            #print(id, userid, filename, model_inference)
-            #print(result)
-            return [model_inference, False, False]
-        else:
-            raise PreventUpdate
-
-
-    @app.callback([Output('hidden-save-success','children'),
-                   Output('confirm-error','displayed')],
-                  [Input('model-feedback-save', 'n_clicks')],
-                  [State('hidden-filename', 'children'),
-                  State('model-feedback-refid', 'value'),
-                  State('model-feedback-dropdown', 'value'),
-                  State('model-feedback-number', 'value'),
-                  State('model-feedback-text', 'value')
-                  ],
-                  )
-    def save_model_feedback(n_clicks, id, refid, flag, hc, comment):
-        ctx = dash.callback_context # get the context why the function is trigerred
-        if ctx.triggered[0]['prop_id'] == "model-feedback-save.n_clicks":
-            userid = current_user.email 
-            result = derma_save_feedback(id, refid, userid, flag, hc, comment)
-            if result:
-                return [[True], False]
-            else:
-                return [[False], True]
+                print("error saving file to GCS")
+                return ["","Error processing.",False]
         else:
             raise PreventUpdate
 

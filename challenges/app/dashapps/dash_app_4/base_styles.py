@@ -11,8 +11,7 @@ style_data_conditional=[{
     'textAlign': 'center'
 }]
 
-button = {'margin-top': '10px', 
-          'margin-left': '20px',
+button = {'margin-top': '10px',
           'margin-bottom': '10px'}
 fixed_width = {'width':'170px'}
 

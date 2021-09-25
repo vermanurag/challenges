@@ -7,7 +7,7 @@
 <p>Welcome to {{config.BRAND }} web apps.</p>
 <br>
 {% if access|length > 0  %}
-<p>You have access to the following apps:<p>
+<p>You have access to the following:<p>
 
 {% for app in access %}
 {% if (app.app_id == 'dash_app_1') and (1 in config.ACTIVE_DASH_APPS) %}
@@ -33,17 +33,10 @@
 {% endif %}
 {% endfor %}
 
-<p>Don't see your App listed here? Email: {{config.DEVELOPER_EMAIL}} to get access</p>
+<p>Don't see your App listed here? Email: {{config.DEVELOPER_EMAIL}} to get access. Your registered email: {{current_user.email}}</p>
 {% else %}
-<p>You dont seem to have access to any App. Email: {{config.DEVELOPER_EMAIL}} to get access</p>
+<p>You dont seem to have access to any App. Email: {{config.DEVELOPER_EMAIL}} to get access. Your registered email: {{current_user.email}}</p>
 {% endif %}
-<pre>
-<strong>DISCLAIMER</strong>
-This application has been developed as an aid to the dermatologist for the trichoscopic assessment of hair count.
-It does not overrule clinical judgement and is limited by the quality of the photograph and its interpretation by the software.
-The application and its output result should not serve as the only deciding criteria for the management of any case.
-This application and its output result, cannot serve for any medicolegal purposes.
-</pre>
 {% else %}
 <p>Welcome to AIML demo for web apps. You will need to login to access these apps. Access to apps is controlled via Microsoft or Google Authentication.</p>
 {% endif %}
