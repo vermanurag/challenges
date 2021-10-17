@@ -2,43 +2,185 @@
 {% block app_content %}
 
 <div style = "width:90%; margin:auto">
-<h1>Hi, {{ current_user.name }}!</h1>
 {% if current_user.is_authenticated %}
-<p>Welcome to {{config.BRAND }} web apps.</p>
-<br>
+  <h1>Welcome to Master Data Science Challenges powered by MathLogic</h1>
 {% if access|length > 0  %}
-<p>You have access to the following:<p>
 
-{% for app in access %}
-{% if (app.app_id == 'dash_app_1') and (1 in config.ACTIVE_DASH_APPS) %}
-<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_1') }}">{{ config.DASH_APP_1_MENU_TEXT}}</a><br>
-{% elif app.app_id == 'dash_app_2' and (2 in config.ACTIVE_DASH_APPS) %}
-<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_2') }}">{{ config.DASH_APP_2_MENU_TEXT}}</a><br>
-{% elif app.app_id == 'dash_app_3' and (3 in config.ACTIVE_DASH_APPS) %}
-<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_3') }}">{{ config.DASH_APP_3_MENU_TEXT}}</a><br>
-{% elif app.app_id == 'dash_app_4' and (4 in config.ACTIVE_DASH_APPS) %}
-<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_4') }}">{{ config.DASH_APP_4_MENU_TEXT}}</a><br>
-{% elif app.app_id == 'dash_app_5' and (5 in config.ACTIVE_DASH_APPS) %}
-<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_5') }}">{{ config.DASH_APP_5_MENU_TEXT}}</a><br>
-{% elif app.app_id == 'dash_app_6' and (6 in config.ACTIVE_DASH_APPS) %}
-<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_6') }}">{{ config.DASH_APP_6_MENU_TEXT}}</a><br>
-{% elif app.app_id == 'dash_app_7' and (7 in config.ACTIVE_DASH_APPS) %}
-<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_7') }}">{{ config.DASH_APP_7_MENU_TEXT}}</a><br>
-{% elif app.app_id == 'dash_app_8' and (8 in config.ACTIVE_DASH_APPS) %}
-<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_8') }}">{{ config.DASH_APP_8_MENU_TEXT}}</a><br>
-{% elif app.app_id == 'dash_app_9' and (9 in config.ACTIVE_DASH_APPS) %}
-<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_9') }}">{{ config.DASH_APP_9_MENU_TEXT}}</a><br>
-{% elif app.app_id == 'dash_app_10' and (10 in config.ACTIVE_DASH_APPS) %}
-<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_10') }}">{{ config.DASH_APP_10_MENU_TEXT}}</a><br>
-{% endif %}
-{% endfor %}
+<div class="container-fluid"> 
+  <legend>Congratulations on being part of this elite group of Data Scientists within Accenture</legend>
+  <div class="row" >
+	<div id="leftcolumn" class="col-md-6 col-lg-6 left-paragraph">
+		<p>Master Data Science Challenges represent a series of Data Science problems that participants would try to solution. Each challenge represents a typical client Data Science problem. Paricipants compete as teams to build the "Best Solution" based on a training dateset.</p>
+		<p>The solution modeling efficacy is determined based on performance on test dataset(s). The metric used would be pre determined for each challenge. Additionally, each team is required to submit an Executive Summary(maximum of two pages) explaining the solution. Each participant would accumulate Challenge points based upon the above submissions</p>
+		<p>No Hardware/ common computation environment will be provided for the competition</p>
+	</div>
+	
+	<div id="rightcolumn" class="col-md-6 col-lg-6 right-paragraph">
+		<div class="card bg-secondary">
+		<div class="card-header">RULES AT A GLANCE:</div>
+		<div class="card-body"><small>
+		<p>Participate as teams. Any team member can submit and submission will reflect on the team’s score. </p>
+		<p>Teams can submit multiple entries for modelling results. The "best" score would be used to allocate challenge points. A daily and overall cap may be introduced if gaming is suspected.</p>
+		<p>Use of any External data is not permitted.</p>
+		<p>Any modelling technique can be leveraged.</p>
+		<p>ONLY the last Executive Summary submission before the deadline would be evaluated. Subjective evaluation done by SME’s are final</p>
+			</small>
+		<p>MathLogic reserves the right to modify rules in order to achieve the outcome desired by Accenture. </p>
+		</div>
+		</div>
+	</div>
+  </div>
+  <br>
+  <legend>How can I earn Challenge Points?</legend>
+  <p>Each challenge provides an opportunity to earn a maximum of 100 challenge points. Challenge points are allocated for modeling efficacy as well as executive summary. All members of team earn the same amount of challenge points</p>
+  <div class="row">
+    <div class="col-md-7 col-lg-7 left-paragraph">
+	    <img src="{{config.PREFIX}}{{ url_for('static', filename='img/weightages.png')}}" alt="Weightages" width="100%" >
+    </div>
+    <div class="col-md-5 col-lg-5 right-paragraph">
+	    <img src="{{config.PREFIX}}{{ url_for('static', filename='img/pointsgrid.png')}}" alt="Weightages" width="100%" >
+    </div>
+  </div>
+  <br>
+  <legend>Where can I find more details about each Challenge</legend>
+  <p>The details of available challenge are given below. Click on each Challenge ID to see the details. More information about future challenges would be added as they are finalized.</p>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link"  href="javascript:showhide('mdsc01')">MDSC01</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  href="javascript:showhide('mdsc02')">MDSC02</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  href="javascript:showhide('mdsc03')">MDSC03</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  href="javascript:showhide('mdsc04')">MDSC04</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  href="javascript:showhide('mdsc05')">MDSC05</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  href="javascript:showhide('mdsc06')">MDSC06</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  href="javascript:showhide('mdsc07')">MDSC07</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  href="javascript:showhide('mdsc08')">MDSC08</a>
+    </li>
+  </ul>
+<div id="myTabContent" class="tab-content">
+  <div class="tab-pane" style="none" id="mdsc01">
+    <legend>MDSC01: Predicting Credit Card Fraud</legend>
+    <p>Credit card fraud transactions is one of biggest issues faced by consumers and credit card issuers. Estimated world-wide loss due to fraud is USD 28.65 Billion* in 2019 to credit card issuers. A key part of fraud mitigation is fraud detection by leveraging sophisticated analytics in identifying fraudulent transaction on real time basis Challenge is to identify potential fraudulent credit card transaction. In MDSC01, you will build a binary classification model based on Train dataset and then use it to predict possibly fraudulent transactions on Test dataset.</p>
 
-<p>Don't see your App listed here? Email: {{config.DEVELOPER_EMAIL}} to get access. Your registered email: {{current_user.email}}</p>
+    <div class = "row">
+  <div class="col-md-6 col-lg-6 left-paragraph">
+    <div class="card bg-secondary">
+      <div class="card-header">DATA DESCRIPTION</div>
+      <div class="card-body">
+	      <p>TBD</p>
+	      <p>TBD</p>
+	      <p>TBD</p>
+	      <p>TBD</p>
+	      <p>TBD</p>
+	      <p>TBD</p>
+	      <p>TBD</p>
+	      <p>TBD</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-6 right-paragraph">
+    <div class="card bg-secondary">
+      <div class="card-header">MODELLING METRIC</div>
+      <div class="card-body">LogLoss</div>
+    </div>
+    <div class="card bg-secondary">
+      <div class="card-header">SOLUTION FORMAT</div>
+      <div class="card-body">
+	      <p>CSV file with following columns:</p>
+	      <p>Second Line</p>
+      </div>
+    </div>
+  </div>
+   </div>
+   <br>
+    <div class = "row">
+  <div class="col-md-12 col-lg-12 ">
+    <div class="card bg-secondary">
+      <div class="card-header">SOLUTION SUBMISSION</div>
+      <div class="card-body">
+	      <p>Once the csv file(.csv extension required) is ready click <a href = "submit">Submit</a> and upload the file under questionid <strong>5cd8fce8-a801-417d-89b8-dbeeed9dbf82</strong> </p>
+	      <p>Also <a href = "submit">Submit</a> the Executive Summary(.pdf extension required) under questionid <strong>ce706c03-dcf5-405d-9cc5-d132d4cd5824</strong>  </p>
+      </div>
+   </div>
+    </div>
+
+    </div>
+  </div>
+  <div class="tab-pane" style="none" id="mdsc02">
+    <p>MDSC02 Content</p>
+  </div>
+  <div class="tab-pane" style="none" id="mdsc03">
+    <p>Coming Soon...</p>
+  </div>
+  <div class="tab-pane" style="none" id="mdsc04">
+    <p>Coming Soon...</p>
+  </div>
+  <div class="tab-pane" style="none" id="mdsc05">
+    <p>Coming Soon...</p>
+  </div>
+  <div class="tab-pane" style="none" id="mdsc06">
+    <p>Coming Soon...</p>
+  </div>
+  <div class="tab-pane" style="none" id="mdsc07">
+    <p>Coming Soon...</p>
+  </div>
+  <div class="tab-pane" style="none" id="mdsc08">
+    <p>Coming Soon...</p>
+  </div>
+</div>
+
+
+</div>
+
+<br>
+<br>
+<div>
+	    <img src="{{config.PREFIX}}{{ url_for('static', filename='img/user_journey.png')}}" alt="Weightages" width="100%" >
+</div>
+
+</div>
+<script>
+        function showhide(id) {
+        var a = document.getElementById('mdsc01');
+        a.style.display = 'none'
+        var a = document.getElementById('mdsc02');
+        a.style.display = 'none'
+        var a = document.getElementById('mdsc03');
+        a.style.display = 'none'
+        var a = document.getElementById('mdsc04');
+        a.style.display = 'none'
+        var a = document.getElementById('mdsc05');
+        a.style.display = 'none'
+        var a = document.getElementById('mdsc06');
+        a.style.display = 'none'
+        var a = document.getElementById('mdsc07');
+        a.style.display = 'none'
+        var a = document.getElementById('mdsc08');
+        a.style.display = 'none'
+        var e = document.getElementById(id);
+        e.style.display = (e.style.display == 'block') ? 'none' : 'block';
+     }
+    </script>
+
+
 {% else %}
-<p>You dont seem to have access to any App. Email: {{config.DEVELOPER_EMAIL}} to get access. Your registered email: {{current_user.email}}</p>
+<p>You don't seem to be registered for the Master Data Science Challenges. If you are eligible contact Accenture Training team or drop an email to {{config.DEVELOPER_EMAIL}} requesting access. Your registered email: {{current_user.email}}</p>
 {% endif %}
 {% else %}
-<p>Welcome to AIML demo for web apps. You will need to login to access these apps. Access to apps is controlled via Microsoft or Google Authentication.</p>
+<p>Welcome to Master Data Science Challange portal. You will need to login to access the content. Login via Microsoft Authentication.</p>
 {% endif %}
 
 </div>

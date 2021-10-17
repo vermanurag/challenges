@@ -6,15 +6,5 @@
         Please Sign In using Microsoft Account
     </a>
     <br>
-    <a class="btn btn-primary btn-lg btn-block" role="button" href='{{ google_auth_url }}'>
-        Please Sign In using Google Account
-    </a>
-    <br>
-    <a class="btn btn-primary btn-lg btn-block" role="button" href='{{ li_auth_url }}'>
-        Please Sign In using Linked Account
-    </a>
-    {% if current_user.is_authenticated %}
-        <H3>Logged in as {{ current_user.name }}</H3>
-    {% endif %}
 </div>
 {% endblock %}

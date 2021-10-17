@@ -18,6 +18,22 @@ def get_data(userid,creds = '/home/anuragverma/challenges/.gcp_key_competencyass
         query="""WITH view1 as
 (select * from competencyassessment.assessment.event_questions where eventid in (select eventid from competencyassessment.assessment.event_users where userid = '{}'))
 select eventid, q.questionid, type, file_type from view1 join competencyassessment.assessment.questions q on view1.questionid=q.questionid""".format(userid)
+        query="""
+WITH view1 as
+(select * from competencyassessment.assessment.event_questions
+   where eventid in
+      (select e.eventid from competencyassessment.assessment.event_users u
+           join competencyassessment.assessment.event e
+           on u.eventid=e.eventid
+           where userid = '{}'
+           and e.active
+           and e.event_end >= current_timestamp()
+       )
+)
+select eventid, q.questionid, type, file_type from view1 join competencyassessment.assessment.questions q on view1.questionid=q.questionid
+""".format(userid)
+        query=query.replace('\n',' ')
+        query=query.replace('  ',' ')
         query_job = bq_client.query(query)
         result = [dict(row) for row in query_job]
         return json.dumps(result)

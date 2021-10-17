@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block app_content %}
+
+<div style = "width:90%; margin:auto">
+<h1>Hi, {{ current_user.name }}!</h1>
+{% if current_user.is_authenticated %}
+<p>Welcome to {{config.BRAND }} web apps.</p>
+<br>
+{% if access|length > 0  %}
+<p>You have access to the following:<p>
+
+{% for app in access %}
+{% if (app.app_id == 'dash_app_1') and (1 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_1') }}">{{ config.DASH_APP_1_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_2' and (2 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_2') }}">{{ config.DASH_APP_2_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_3' and (3 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_3') }}">{{ config.DASH_APP_3_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_4' and (4 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_4') }}">{{ config.DASH_APP_4_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_5' and (5 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_5') }}">{{ config.DASH_APP_5_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_6' and (6 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_6') }}">{{ config.DASH_APP_6_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_7' and (7 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_7') }}">{{ config.DASH_APP_7_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_8' and (8 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_8') }}">{{ config.DASH_APP_8_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_9' and (9 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_9') }}">{{ config.DASH_APP_9_MENU_TEXT}}</a><br>
+{% elif app.app_id == 'dash_app_10' and (10 in config.ACTIVE_DASH_APPS) %}
+<a  href="{{ config.PREFIX }}{{ url_for('dashapps.dash_app_10') }}">{{ config.DASH_APP_10_MENU_TEXT}}</a><br>
+{% endif %}
+{% endfor %}
+
+<p>Don't see your App listed here? Email: {{config.DEVELOPER_EMAIL}} to get access. Your registered email: {{current_user.email}}</p>
+{% else %}
+<p>You dont seem to be registered for the Master Data Science Challenges Portal. . Email: {{config.DEVELOPER_EMAIL}} to get access. Your registered email: {{current_user.email}}</p>
+{% endif %}
+{% else %}
+<p>Welcome to Master Data Science Challange portal. You will need to login to access the content. Login via Microsoft Authentication.</p>
+{% endif %}
+
+</div>
+
+{% endblock %}
