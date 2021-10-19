@@ -79,7 +79,7 @@ def register_callbacks(app):
         if ctx.triggered[0]['prop_id'] != "submit.n_clicks":
             raise PreventUpdate
         skip= False
-        base_url='https://us-central1-competencyassessment.cloudfunctions.net/evaluate_v9'
+        base_url='https://us-central1-competencyassessment.cloudfunctions.net/evaluate'
         userid=current_user.email
         params={'eventid':eventid, 'userid':userid,'questionid':questionid }
         if qtype == 'solution_value':

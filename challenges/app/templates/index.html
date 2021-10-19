@@ -7,12 +7,13 @@
 {% if access|length > 0  %}
 
 <div class="container-fluid"> 
-  <legend>Congratulations on being part of this elite group of Data Scientists within Accenture</legend>
+  <legend>Congratulations on being part of this elite group of Data Scientists in Accenture</legend>
   <div class="row" >
 	<div id="leftcolumn" class="col-md-6 col-lg-6 left-paragraph">
-		<p>Master Data Science Challenges represent a series of Data Science problems that participants would try to solution. Each challenge represents a typical client Data Science problem. Paricipants compete as teams to build the "Best Solution" based on a training dateset.</p>
-		<p>The solution modeling efficacy is determined based on performance on test dataset(s). The metric used would be pre determined for each challenge. Additionally, each team is required to submit an Executive Summary(maximum of two pages) explaining the solution. Each participant would accumulate Challenge points based upon the above submissions</p>
-		<p>No Hardware/ common computation environment will be provided for the competition</p>
+		<p>Master Data Science Challenges is a series of Data Science problems that participants would try to solve. Each challenge represents a typical client Data Science problem. Participants compete as teams to build the "Best Solution" based on a training dataset.</p>
+		<p>The solution modeling efficacy is determined based on performance of the solution on test dataset(s). The metric used would be predetermined for each challenge. Also, each team is required to submit an Executive Summary(maximum of two pages) explaining the solution. Each participant would accumulate Challenge Points based upon the above submissions</p>
+		<p>The team/ individual with maximum Challenge Points across the challenges would be the winner.</p>
+		<p>No Hardware/ common computation environment will be provided for the competition. Participants are expected to use their Accenture provided computing resources.</p>
 	</div>
 	
 	<div id="rightcolumn" class="col-md-6 col-lg-6 right-paragraph">
@@ -20,19 +21,20 @@
 		<div class="card-header">RULES AT A GLANCE:</div>
 		<div class="card-body"><small>
 		<p>Participate as teams. Any team member can submit and submission will reflect on the team’s score. </p>
-		<p>Teams can submit multiple entries for modelling results. The "best" score would be used to allocate challenge points. A daily and overall cap may be introduced if gaming is suspected.</p>
+		<p>Teams can submit multiple entries for modelling results. The "best" score would be used to allocate Challenge Points. A daily and overall cap may be introduced if gaming is suspected.</p>
 		<p>Use of any External data is not permitted.</p>
 		<p>Any modelling technique can be leveraged.</p>
-		<p>ONLY the last Executive Summary submission before the deadline would be evaluated. Subjective evaluation done by SME’s are final</p>
+		<p>ONLY the last Executive Summary submission before the deadline would be evaluated.</p>
+		<p>Subjective evaluation done by SME’s are final</p>
 			</small>
-		<p>MathLogic reserves the right to modify rules in order to achieve the outcome desired by Accenture. </p>
+		<p>Points allocation may be finetuned in order to achieve the outcome desired by Accenture. </p>
 		</div>
 		</div>
 	</div>
   </div>
   <br>
   <legend>How can I earn Challenge Points?</legend>
-  <p>Each challenge provides an opportunity to earn a maximum of 100 challenge points. Challenge points are allocated for modeling efficacy as well as executive summary. All members of team earn the same amount of challenge points</p>
+  <p>Each challenge provides an opportunity to earn a maximum of 100 Challenge Points. Challenge Points are allocated for modeling efficacy as well as executive summary. All members of a team earn same Challenge Points.</p>
   <div class="row">
     <div class="col-md-7 col-lg-7 left-paragraph">
 	    <img src="{{config.PREFIX}}{{ url_for('static', filename='img/weightages.png')}}" alt="Weightages" width="100%" >
@@ -42,9 +44,12 @@
     </div>
   </div>
   <br>
-  <legend>Where can I find more details about each Challenge</legend>
+  <legend>Where can I find more details about each Challenge?</legend>
   <p>The details of available challenge are given below. Click on each Challenge ID to see the details. More information about future challenges would be added as they are finalized.</p>
   <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link"  href="javascript:showhide('mdsc00')">MDSC00</a>
+    </li>
     <li class="nav-item">
       <a class="nav-link"  href="javascript:showhide('mdsc01')">MDSC01</a>
     </li>
@@ -71,36 +76,44 @@
     </li>
   </ul>
 <div id="myTabContent" class="tab-content">
-  <div class="tab-pane" style="none" id="mdsc01">
-    <legend>MDSC01: Predicting Credit Card Fraud</legend>
-    <p>Credit card fraud transactions is one of biggest issues faced by consumers and credit card issuers. Estimated world-wide loss due to fraud is USD 28.65 Billion* in 2019 to credit card issuers. A key part of fraud mitigation is fraud detection by leveraging sophisticated analytics in identifying fraudulent transaction on real time basis Challenge is to identify potential fraudulent credit card transaction. In MDSC01, you will build a binary classification model based on Train dataset and then use it to predict possibly fraudulent transactions on Test dataset.</p>
+  <div class="tab-pane" style="none" id="mdsc00">
+    <legend>MDSC00: Sample Challenge for Testing</legend>
+    <p>This will have the description of challenge. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
     <div class = "row">
   <div class="col-md-6 col-lg-6 left-paragraph">
     <div class="card bg-secondary">
       <div class="card-header">DATA DESCRIPTION</div>
       <div class="card-body">
-	      <p>TBD</p>
-	      <p>TBD</p>
-	      <p>TBD</p>
-	      <p>TBD</p>
-	      <p>TBD</p>
-	      <p>TBD</p>
-	      <p>TBD</p>
-	      <p>TBD</p>
+              <h3>Two datasets will be provided</h3>
+              <p><a href="https://storage.cloud.google.com/masterdatasciencechallenges/MDSC00_train.csv" download>Train</a></p> 
+              <p><a href="https://storage.cloud.google.com/masterdatasciencechallenges/MDSC00_test.csv" download>Test</a></p>
+              <h3>Train Dataset</h3>
+              <p>Dummy Train dataset is being provided.</p>
+	      <p>id: Transaction ID.</p>
+	      <p>A unique identifier</p>
+              <p>dummy1 – dummy2: Unnamed Features to be used for model building. No Description are available for features dummy1 – dummy2</p>
+              <p>Target (1 = target transaction, 0 = non target Transaction)</p>
+              <h3>Test Dataset</h3>
+              <p>Has the same columns as Train Dataset except the Target Variable</p>
       </div>
     </div>
   </div>
   <div class="col-md-6 col-lg-6 right-paragraph">
     <div class="card bg-secondary">
       <div class="card-header">MODELLING METRIC</div>
-      <div class="card-body">LogLoss</div>
+      <div class="card-body">
+        <p>Modelling efficacy will be decided based on <strong>LogLoss</strong> metric as measured on the test data set.</p>
+        <p>More details can be found <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html" target="_blank" rel='nofollow noopener noreferrer'>here</a></p>
+      </div>
     </div>
     <div class="card bg-secondary">
       <div class="card-header">SOLUTION FORMAT</div>
       <div class="card-body">
-	      <p>CSV file with following columns:</p>
-	      <p>Second Line</p>
+              <p>Submissions are made via a single csv file with three columns with headers as "id", "y_pred_0" and "y_pred_1".</p>
+              <p>y_pred_0 is the probability that transaction is not fraud. y_pred_1 is probability that transaction is fraud. Probability values should be between 0 and 1. y_pred_0 + y_pred_1 = 1. Null values are not allowed.</p>
+              <p>id columns needs to have same value as id column of test dataset. No duplicates are allowed.Prediction should be made for all observations in the test dataset. Partial submissions are not allowed.</p>
+              <p>Download sample file <a href=https://storage.cloud.google.com/masterdatasciencechallenges/MDSC00_sample.csv download>here</a></p>
       </div>
     </div>
   </div>
@@ -111,8 +124,63 @@
     <div class="card bg-secondary">
       <div class="card-header">SOLUTION SUBMISSION</div>
       <div class="card-body">
-	      <p>Once the csv file(.csv extension required) is ready click <a href = "submit">Submit</a> and upload the file under questionid <strong>5cd8fce8-a801-417d-89b8-dbeeed9dbf82</strong> </p>
-	      <p>Also <a href = "submit">Submit</a> the Executive Summary(.pdf extension required) under questionid <strong>ce706c03-dcf5-405d-9cc5-d132d4cd5824</strong>  </p>
+	      <p>Once the csv file(.csv extension required) is ready, click <a href = "submit">Submit</a> and upload the file under questionid <strong>3523ec4c-73cd-4508-b53e-8901d14f2258</strong> and Eventid <strong>MDSC00</strong></p>
+	      <p>Also <a href = "submit">Submit</a> the Executive Summary(.pdf extension required) under questionid <strong>783b0bed-7c51-40ac-90f8-38434d51c40b</strong> and Eventid <strong>MDSC00</strong> </p>
+      </div>
+   </div>
+    </div>
+
+    </div>
+  </div>
+  <div class="tab-pane" style="none" id="mdsc01">
+    <legend>MDSC01: Predicting Credit Card Fraud</legend>
+    <p>Credit card fraud transactions is one of biggest issues faced by consumers and credit card issuers. Estimated world-wide loss due to fraud is USD 28.65 Billion* in 2019 to credit card issuers. A key part of fraud mitigation is fraud detection by leveraging sophisticated analytics in identifying fraudulent transaction on real time basis Challenge is to identify potential fraudulent credit card transaction. In MDSC01, you will build a binary classification model based on Train dataset and then use it to predict possibly fraudulent transactions on Test dataset.</p>
+
+    <div class = "row">
+  <div class="col-md-6 col-lg-6 left-paragraph">
+    <div class="card bg-secondary">
+      <div class="card-header">DATA DESCRIPTION</div>
+      <div class="card-body">
+              <h3>Two datasets will be provided</h3>
+              <p><a href=https://storage.cloud.google.com/masterdatasciencechallenges/MDSC01_train.csv download>Train</a></p> 
+              <p><a href=https://storage.cloud.google.com/masterdatasciencechallenges/MDSC01_test.csv download>Test</a></p>
+              <h3>Train Dataset</h3>
+              <p>id: Transaction ID. A unique identifier</p>
+              <p>X1 – X29: Unnamed Features to be used for model building. No Description are available for features X1 – X29</p>
+              <p>Amount: Transaction Amount as named feature to be used in model building</p>
+              <p>Target (1 = Fraud transaction, 0 = Non-Fraud Transaction)</p>
+              <h3>Test Dataset</h3>
+              <p>Has the same columns as Train Dataset except the Target Variable</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-6 right-paragraph">
+    <div class="card bg-secondary">
+      <div class="card-header">MODELLING METRIC</div>
+      <div class="card-body">
+        <p>Modelling efficacy will be decided based on <strong>LogLoss</strong> metric as measured on the test data set.</p>
+        <p>More details can be found <a href="https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html" target="_blank" rel='nofollow noopener noreferrer'>here</a></p>
+      </div>
+    </div>
+    <div class="card bg-secondary">
+      <div class="card-header">SOLUTION FORMAT</div>
+      <div class="card-body">
+              <p>Submissions are made via a single csv file with three columns with headers as "id", "y_pred_0" and "y_pred_1".</p>
+              <p>y_pred_0 is the probability that transaction is not fraud. y_pred_1 is probability that transaction is fraud. Probability values should be between 0 and 1. y_pred_0 + y_pred_1 = 1. Null values are not allowed.</p>
+              <p>id columns needs to have same value as id column of test dataset. No duplicates are allowed.Prediction should be made for all observations in the test dataset. Partial submissions are not allowed.</p>
+              <p>Download sample file <a href=https://storage.cloud.google.com/masterdatasciencechallenges/MDSC01_sample.csv download>here</a></p>
+      </div>
+    </div>
+  </div>
+   </div>
+   <br>
+    <div class = "row">
+  <div class="col-md-12 col-lg-12 ">
+    <div class="card bg-secondary">
+      <div class="card-header">SOLUTION SUBMISSION</div>
+      <div class="card-body">
+              <p>Once the csv file(.csv extension required) is ready click <a href = "submit">Submit</a> and upload the file under questionid <strong>5cd8fce8-a801-417d-89b8-dbeeed9dbf82</strong> </p>
+              <p>Also <a href = "submit">Submit</a> the Executive Summary(.pdf extension required) under questionid <strong>ce706c03-dcf5-405d-9cc5-d132d4cd5824</strong>  </p>
       </div>
    </div>
     </div>
@@ -154,6 +222,8 @@
 </div>
 <script>
         function showhide(id) {
+        var a = document.getElementById('mdsc00');
+        a.style.display = 'none'
         var a = document.getElementById('mdsc01');
         a.style.display = 'none'
         var a = document.getElementById('mdsc02');

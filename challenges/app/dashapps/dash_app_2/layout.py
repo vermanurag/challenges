@@ -13,17 +13,28 @@ import dash_pivottable
 layout = dbc.Col(html.Div(children=[html.Br(),
 html.Div(html.H4(id='dashboard-heading',style={'width':'100%','margin':'auto'})),
 html.Button("Refresh",id='refresh', n_clicks=0, className = 'btn btn-primary btn-lg', hidden=True),
-dcc.Store(id='hidden-data'),
-dcc.Tabs(id='tabs', value='tab3', children=[
-                dcc.Tab(label='Overall', id='tab1', value='tab1',disabled=True),
-                dcc.Tab(label='Active Events', id='tab2', value='tab2', disabled = True),
-                dcc.Tab(label='GCP Academy', id='tab3', value='tab3'),
-                dcc.Tab(label='DS Challenges', id='tab4', value='tab4', disabled = True),
-                dcc.Tab(label='AWS Academy', id='tab5', value='tab5', disabled = True),
-                dcc.Tab(label='All Submissions', id='tab6', value='tab6', disabled = True),
+dcc.Store(id='hidden-data-active'),
+dcc.Store(id='hidden-data-completed'),
+dcc.Tabs(id='tabs', value='tab1', children=[
+                dcc.Tab(label='Live Challenge', id='tab1', value='tab1',disabled=False),
+                dcc.Tab(label='Completed Challenges', id='tab2', value='tab2', disabled = False),
+                dcc.Tab(label='Overall Standing', id='tab3', value='tab3', disabled=False),
+                dcc.Tab(label='My Challenge Points', id='tab4', value='tab4', disabled = False),
+                dcc.Tab(label='My Submissions', id='tab5', value='tab6', disabled = False),
                 ]),
-                html.Div(id='tab-content-1',children=[
-                    dash_table.DataTable(id='df11',css=dashtable_css,columns=columns11,data=df11[col11].to_dict('records'),editable=True, row_selectable='multi', merge_duplicate_headers=True, sort_action = 'native' ,style_header=style_header, style_data_conditional=style_data_conditional)]),
+html.Br(),
+html.Div(id='tab-content-1',
+children=[
+       html.Div(children = [dbc.Row(children=[
+          dbc.Col(children=[html.Div('Event', className='btn btn-primary btn-lg', style = {'width': '100%'}),
+          dcc.Dropdown(id='eventid-dropdown', className = "btn btn-lg", style = {'width': '400px'}, options=[])], width=6),
+          dbc.Col(children=[html.Div('Question', className='btn btn-primary btn-lg',style = {'width': '100%'}),
+          dcc.Dropdown(id='questionid-dropdown', className = "btn" , style = {'width': '400px'}, options = [] )], width=6)]),
+          dbc.Row(html.Button(id="description", className="btn btn-primary btn-lg", n_clicks=0, style = {'width':'100%'})),
+          html.Br(),
+          html.Div(children=dash_table.DataTable(id='df11',css=dashtable_css,columns=columns11,data=None,editable=True, row_selectable='multi', merge_duplicate_headers=True, sort_action = 'native' ,style_header=style_header, style_data_conditional=style_data_conditional))
+          ])
+          ]),
                 html.Div(id='tab-content-2',children=[
                     dash_table.DataTable(id='df21',css=dashtable_css,columns=columns21,data=df21[col21].to_dict('records'),editable=True, merge_duplicate_headers=True,  sort_action = 'native' ,style_header=style_header, style_data_conditional=style_data_conditional)]),
                 html.Div(id='tab-content-3',children=[
