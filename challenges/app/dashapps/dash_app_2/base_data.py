@@ -6,16 +6,16 @@ import base64
 from datetime import datetime
 from pathlib import Path
 DATA_DIR = current_app.config['DATA_DIR']
+from google.cloud import bigquery
+import os, json
+creds = '/home/anuragverma/challenges/.gcp_key_competencyassessment.json'
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = creds
+bq_client = bigquery.Client()
 
 import numpy as np
 import pandas as pd
-df_base = pd.read_csv("/home/monica.marmit/sample.csv")
 
 def get_active_event_data(userid,creds = '/home/anuragverma/challenges/.gcp_key_competencyassessment.json'):
-        from google.cloud import bigquery
-        import os, json
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = creds
-        bq_client = bigquery.Client()
         query="""WITH active_events as (select distinct e.eventid, e.event_start  from 
 competencyassessment.assessment.event_users eu 
 join competencyassessment.assessment.event e 
@@ -43,85 +43,137 @@ order by score*sort, attempts desc
         query=query.replace("  "," ")
         query_job = bq_client.query(query)
         result = [dict(row) for row in query_job]
-        return json.dumps(result)
+        return json.dumps(result,default=str)
 
-def get_completed_event_data(userid):
+def get_completed_event_data(creds = '/home/anuragverma/challenges/.gcp_key_competencyassessment.json'):
+        query="""WITH event_teams as 
+(select e.eventid,eu.team,string_agg(userid, ", ") as members, max(event_name) as description
+from `competencyassessment.assessment.event_users` eu
+join `competencyassessment.assessment.event` e
+on eu.eventid = e.eventid
+where e.eventid like "MDSC%"
+group by e.eventid, team),
+last_scores as
+(select eventid, team, category , score, row_number() over(partition by eventid, team, category order by updated desc) as rank
+from `competencyassessment.assessment.final_scores`
+),
+interim as 
+(select et.eventid, et.team, et.members, et.description,
+sum(case when category = "Relative" then score else 0 end) as model_rel,
+sum(case when category = "Content" then score else 0 end) as exec_sum_con,
+sum(case when category = "Format" then score else 0 end) as exec_sum_form,
+sum(case when category in ('Relative','Content','Format') then score else 0 end) as total_score
+from last_scores ls 
+join event_teams et 
+on ls.eventid = et.eventid
+and ls.team=et.team
+where rank =1
+group by et.eventid, et.team, et.members, et.description)
+select *, rank() over (partition by eventid order by total_score desc) as rank
+from interim 
+        """
+        query=query.replace("\n"," ")
+        query=query.replace("  "," ")
+        query_job = bq_client.query(query)
+        result = [dict(row) for row in query_job]
+        return json.dumps(result,default=str)
+
+def save_local(js,filename='completed_challenges.csv'):
+    df = pd.read_json(js)
+    df.to_csv(os.path.join(DATA_DIR,filename),index=False)
     return None
 
+save_local(get_completed_event_data())
 
-def overall(df):
-    df["gm"] = np.where(df["Rank"]==1, 1, 0)
-    df["sm"] = np.where(df["Rank"]==2, 1, 0)
-    df["bm"] = np.where(df["Rank"]==3, 1, 0)
-    df["T5"] = np.where(((df["Rank"]>3)&(df["Rank"]<6)), 1, 0)
-    df["T10"] = np.where(((df["Rank"]>5)&(df["Rank"]<11)), 1, 0)
-    df1 = df.groupby("participant_id").agg(Total_Score=("Score","sum"), Total_Submissions=("no_subm","sum"), 
-        Gold_Medals = ("gm","sum"), Silver_Medals = ("sm","sum"), Bronze_Medals = ("bm","sum"), Top_5 = ("T5","sum"), Top_10 = ("T10","sum")).reset_index()
-    return df1
+def get_completed_event_data_local(filename='completed_challenges.csv'):
+    df = pd.read_csv(os.path.join(DATA_DIR,filename))
+    return df.to_json(orient='records')
+
+def get_my_submission_data(userid,creds = '/home/anuragverma/challenges/.gcp_key_competencyassessment.json'):
+        query="""
+        select sc.eventid, sc.userid, sc.questionid, sc.team, sc.score, sc.time, q.description
+from competencyassessment.assessment.scores sc
+join competencyassessment.assessment.questions q
+on sc.questionid = q.questionid
+where userid='{}' and eventid like 'MDSC%'
+        """.format(userid)
+        query=query.replace("\n"," ")
+        query=query.replace("  "," ")
+        query_job = bq_client.query(query)
+        result = [dict(row) for row in query_job]
+        return json.dumps(result,default=str)
 
 
-def event(df,eventid):
-    #df = pd.read_csv(sample_file)
-    df = df[df['Eventid']==eventid]
-    df = df.sort_values(by=['Rank']).reset_index(drop=True).drop("Eventid",axis=1)
-    return df
+def overall(df_in, userid):
+    #df_in=pd.read_json(js)[['members','rank','total_score']]
+    df_in['participant_list']=df_in.apply(lambda x : x['members'].split(','),axis=1)
+    df=df_in.explode('participant_list')
+    df['participant_id']=df['participant_list'].str.strip()
+    df["gm"] = df.apply(lambda x : 1 if x["rank"]==1 else 0, axis=1)
+    df["sm"] = df.apply(lambda x : 1 if x["rank"]==2 else 0, axis=1)
+    df["bm"] = df.apply(lambda x : 1 if x["rank"]==3 else 0, axis=1)
+    df["T5"] = df.apply(lambda x : 1 if (x["rank"] >= 4 and x["rank"] <=5) else 0, axis=1)
+    df["T10"] = df.apply(lambda x : 1 if (x["rank"] >= 6 and x["rank"] <=10) else 0, axis=1)
+    df1 = df.groupby("participant_id").agg(total_score=("total_score","sum"),gm = ("gm","sum"), sm = ("sm","sum"), bm = ("bm","sum"), T5 = ("T5","sum"), T10 = ("T10","sum")).reset_index().sort_values('total_score',ascending=False)
+    df1['rank'] = df1['total_score'].rank(method='dense',ascending=False)
+    df1['percentile']= df1['total_score'].rank(pct=True,method='dense') * 100
+    df1['percentile'] = df1['percentile'].astype(int)
+    df1 = df1[(df1['percentile'] >80) | (df1['participant_id']==userid)] 
+    return df1  
 
 columns11 = [
 {"name":["Rank"],"id":"rank"},
 {"name":["Team"],"id":"team"},
 {"name":["Members"],"id":"members"},
-{"name":["Best Score"],"id":"score"},
+{"name":["Best Model Metric"],"id":"score"},
 {"name":["Attempts"],"id":"attempts"},
 ]
+
+columns21 =[
+{"name":["","Rank"],"id":"rank"},
+{"name":["","Team"],"id":"team"},
+{"name":["","Members"],"id":"members"},
+{"name":["Modeling","Relative"],"id":"model_rel"},
+{"name":["Summary","Content"],"id":"exec_sum_con"},
+{"name":["Summary","Format"],"id":"exec_sum_form"},
+{"name":["Total","Points"],"id":"total_score"},
+        ]
 
 
 columns31 = [
 {"name":["","Participant Name"],"id":"participant_id"},
-{"name":["","Score"],"id":"Total_Score"},
-{"name":["","Submission"],"id":"Total_Submissions"},
-{"name":["Medals","Gold"],"id":"Gold_Medals"},
-{"name":["Medals","Silver"],"id":"Silver_Medals"},
-{"name":["Medals","Bronze"],"id":"Bronze_Medals"},
-{"name":["Medals","Top 5"],"id":"Top_5"},
-{"name":["Medals","Top 10"],"id":"Top_10"}
+{"name":["Challenge","Points"],"id":"total_score"},
+{"name":["Challenge","Rank"],"id":"rank"},
+{"name":["Challenge","Percentile"],"id":"percentile"},
+{"name":["Medals","Gold"],"id":"gm"},
+{"name":["Medals","Silver"],"id":"sm"},
+{"name":["Medals","Bronze"],"id":"bm"},
+{"name":["Medals","Top 5"],"id":"T5"},
+{"name":["Medals","Top 10"],"id":"T10"}
 ]
 
-df11 = overall(df_base)
-#df_event = event(df_base,eventid)
-#df_individual = individual(df_base,p_id)
-
-df21 = event(df_base,'20210906')
-columns21 = [
+columns41 =[
+{"name":["","Event"],"id":"eventid"},
+{"name":["","Team"],"id":"team"},
+{"name":["","Members"],"id":"members"},
+{"name":["Modeling","Relative"],"id":"model_rel"},
+{"name":["Summary","Content"],"id":"exec_sum_con"},
+{"name":["Summary","Format"],"id":"exec_sum_form"},
+{"name":["Total","Points"],"id":"total_score"},
         ]
 
-df31 = None
-columns31 = [
-{"name":["Event"],"id":"eventid"},
-{"name":["Participant Name"],"id":"userid"},
-{"name":["GCP Service"],"id":"service"},
-{"name":["Question"],"id":"questionid"},
-{"name":["Score"],"id":"score"},
-{"name":["Attempts"],"id":"attempts"},
-]
 
-df41 = df_base
-columns41 = [
-        ]
-
-df51 = df_base
 columns51 = [
-        ]
-
-df61 = df_base
-columns61 = [
-        ]
-
+{"name":["My Userid"],"id":"userid"},
+{"name":["Team"],"id":"team"},
+{"name":["Model Metric"],"id":"score"},
+{"name":["Submitted"],"id":"time"},
+]
 
 col11 = [i['id'] for i in columns11]
 col21 = [i['id'] for i in columns21]
 col31 = [i['id'] for i in columns31]
 col41 = [i['id'] for i in columns41]
 col51 = [i['id'] for i in columns51]
-col61 = [i['id'] for i in columns61]
 
 
